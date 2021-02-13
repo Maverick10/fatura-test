@@ -1,9 +1,11 @@
 const ORM = require('./ORM');
+const middlewares = require('./middlewares');
 module.exports = {
     getProducts: async (query) => {
         try {
+            const page = query.page;
+            delete (query.page);
             const models = await ORM.getModels();
-            console.log(query);
             let opt = {
                 include: [{
                     model: models.product,
@@ -23,7 +25,8 @@ module.exports = {
                     [models.product, 'id', 'ASC'],
                     ['price', 'ASC']
                 ],
-                attributes: { exclude: ['product_id', 'provider_id'] }
+                attributes: { exclude: ['product_id', 'provider_id'] },
+                ...(await middlewares.pagination(page))
             }
             const res = await models.product_provider.findAll(opt);
             const result = JSON.parse(JSON.stringify(res, null, 2));
