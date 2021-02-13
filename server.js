@@ -9,7 +9,7 @@ app.listen(serverPort, () => {
     ORM.config();
 });
 
-app.get('/products', async (req, res) => {
+app.get('/products', async (req, res) => {  // ?category_id=val&page=val
     handlers.getProducts(req.query)
         .then(result => res.json(result))
         .catch(err => res.status(400).send({
@@ -19,6 +19,22 @@ app.get('/products', async (req, res) => {
 
 app.put('/products/:id/toggle_featured', async (req, res) => {
     handlers.productsToggleFeatured(req.params.id)
+        .then(result => res.json(result))
+        .catch(err => res.status(400).send({
+            message: 'Error returned from handler. Refer to console output'
+        }));
+})
+
+app.get('/categories', async (req, res) => {
+    handlers.getCategories(req.query)
+        .then(result => res.json(result))
+        .catch(err => res.status(400).send({
+            message: 'Error returned from handler. Refer to console output'
+        }));
+})
+
+app.get('/providers', async (req, res) => {
+    handlers.getProviders(req.query)
         .then(result => res.json(result))
         .catch(err => res.status(400).send({
             message: 'Error returned from handler. Refer to console output'

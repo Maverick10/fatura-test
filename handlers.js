@@ -2,7 +2,7 @@ const ORM = require('./ORM');
 const middlewares = require('./middlewares');
 module.exports = {
     getProducts: async (query) => {     // returns all products satisfying the request query params
-        return new Promise((resolve, reject) => {
+        return new Promise(async (resolve, reject) => {
             try {
                 const page = query.page;
                 delete (query.page);    // query object will be used entirely as the where clause, page is not an attribute of product hence omitting it from where clause
@@ -38,7 +38,7 @@ module.exports = {
     },
 
     productsToggleFeatured: async (id) => {
-        return new Promise((resolve, reject) => {
+        return new Promise(async (resolve, reject) => {
             try {
                 const models = await ORM.getModels();
                 let product = await models.product.findOne({
@@ -60,6 +60,42 @@ module.exports = {
                     success: false,
                     reason: `No product exists with the id ${id}`
                 })
+            }
+            catch (err) { reject(err); }
+        })
+    },
+
+    getCategories: async (query) => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const page = query.page;
+                delete (query.page);
+                const models = await ORM.getModels();
+                let opt = {
+                    where: query,   // query params will be used in where clause
+                    ...(await middlewares.pagination(page))     // spread operator for pagination attrs
+                }
+                const res = await models.category.findAll(opt);
+                const result = JSON.parse(JSON.stringify(res, null, 2));
+                resolve(result);
+            }
+            catch (err) { reject(err); }
+        })
+    },
+
+    getProviders: async (query) => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const page = query.page;
+                delete (query.page);
+                const models = await ORM.getModels();
+                let opt = {
+                    where: query,   // query params will be used in where clause
+                    ...(await middlewares.pagination(page))     // spread operator for pagination attrs
+                }
+                const res = await models.provider.findAll(opt);
+                const result = JSON.parse(JSON.stringify(res, null, 2));
+                resolve(result);
             }
             catch (err) { reject(err); }
         })
