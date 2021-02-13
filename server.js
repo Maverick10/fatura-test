@@ -10,11 +10,17 @@ app.listen(serverPort, () => {
 });
 
 app.get('/products', async (req, res) => {
-    const result = await handlers.getProducts(req.query);
-    res.json(result);
+    handlers.getProducts(req.query)
+        .then(result => res.json(result))
+        .catch(err => res.status(400).send({
+            message: 'Error returned from handler. Refer to console output'
+        }));
 })
 
 app.put('/products/:id/toggle_featured', async (req, res) => {
-    const result = await handlers.productsToggleFeatured(req.params.id);
-    res.send(req.params.id);
+    handlers.productsToggleFeatured(req.params.id)
+        .then(result => res.json(result))
+        .catch(err => res.status(400).send({
+            message: 'Error returned from handler. Refer to console output'
+        }));
 })
