@@ -25,6 +25,14 @@
             RECORDS_PER_REQUEST={{Number of records returned in one request (used in junction with *page* in GET requests)}}
             
     - You can choose not to add `RECORDS_PER_REQUEST` env variable. In this case, a default value of *25* will be used.
+    - `node server.js` to start the server.
+
+### API Endpoints ###
+* Mini Documentation
+    - `GET /products?category_id=&page=` to list all products of a given category.
+    - `PUT /products/:id/toggle_featured` to toggle featured product.
+    - `GET /providers?page=` to list all providers.
+    - `GET /categories?page=` to list all categories.
 
 ### Who do I talk to? ###
 
